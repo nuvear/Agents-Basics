@@ -1,0 +1,38 @@
+{
+  "search_metadata": {
+    "id": "classroom-sample-search-id",
+    "status": "Success"
+  },
+  "search_parameters": {
+    "engine": "google",
+    "q": "current weather in Tokyo, JP in Celsius"
+  },
+  "answer_box": {
+    "type": "weather_result",
+    "temperature": "21",
+    "unit": "Celsius",
+    "feels_like": "21",
+    "precipitation": "10%",
+    "humidity": "65%",
+    "wind": "11 km/h",
+    "location": "Tokyo, Japan",
+    "date": "Classroom sample — not a live observation",
+    "weather": "Cloudy",
+    "forecast": [
+      {
+        "day": "Sample day",
+        "temperature": {
+          "high": "24",
+          "low": "17"
+        },
+        "weather": "Cloudy"
+      }
+    ],
+    "sources": [
+      {
+        "title": "Example weather source",
+        "link": "https://example.com/weather"
+      }
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+# Local credentials and generated files
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+raw_response.json
+*.zip
