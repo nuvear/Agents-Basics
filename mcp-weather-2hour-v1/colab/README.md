@@ -6,6 +6,10 @@ Use the badge to open the published notebook directly from this repository. The 
 
 Use [MCP_Weather_2Hour_Colab.ipynb](MCP_Weather_2Hour_Colab.ipynb) for the student labs. The notebook includes the complete two-hour sequence, embedded Python scripts and fixtures, explanatory notes, exercises and exit ticket.
 
+## Student workbook
+
+Use the [step-by-step Markdown workbook](../workbook/MCP_Colab_Student_Workbook.md) or [printable PDF](../../output/pdf/MCP_Colab_Student_Workbook.pdf), authored by Rajkumar Rajagobalan, alongside the notebook.
+
 ## Student preparation
 
 1. Open [Google Colab](https://colab.research.google.com/).

@@ -29,6 +29,11 @@ The notebook contains the required scripts and sample data. Students do not need
 
 ## Materials
 
+- **[Step-by-step student workbook (Markdown)](mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md)**
+- **[Printable student workbook (PDF)](output/pdf/MCP_Colab_Student_Workbook.pdf)**
+
+Workbook author: **Rajkumar Rajagobalan**. Draft v1.0 includes 38 numbered steps across 12 PDF pages.
+
 - [Student notebook](mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb)
 - [Colab preparation and instructor instructions](mcp-weather-2hour-v1/colab/README.md)
 - [Timed facilitator guide and answer key](mcp-weather-2hour-v1/FACILITATOR.md)
