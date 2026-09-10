@@ -9,3 +9,7 @@ __pycache__/
 .DS_Store
 raw_response.json
 *.zip
+
+# Private presentation build and render checks
+.deck-build/
+node_modules/

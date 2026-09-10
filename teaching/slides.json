@@ -1,0 +1,509 @@
+[
+  {
+    "number": 1,
+    "title": "Before we begin",
+    "time": "Before class",
+    "minutes": 0,
+    "layout": "plain",
+    "items": [
+      "Colab connected · Preparations A–D complete",
+      "OpenAI key in Secrets, or a planned fallback",
+      "Notebook and workbook open side by side",
+      "Pairs ready if one runtime needs help"
+    ],
+    "notes": "SLIDE 1: Before we begin\nTIMING: Before class; Outside the 120-minute core sequence.\n\nPURPOSE: Use this holding slide as students arrive; it is not part of the timed class.\nDO: Open your own notebook and workbook before projecting. Rehearse both model labs with sample weather beforehand. Use a standard CPU runtime. Ask students to run Preparation A, B, C and D in order. Preparation D should show actual MCP discovery and a sample call. Keep keys out of the projected screen. Check that your own OpenAI account and chosen model work.\nASK: Who has a tool result from Preparation D? Pair anyone who is blocked with a ready learner. Distinguish missing setup from missing inference access.\nFALLBACK: No key is acceptable for protocol learning; real model inference must be recorded as pending. Do not spend more than five minutes of class installing packages. If connection issues persist, use a partner demonstration.\nNEXT: Start the 120-minute timer when you advance to the title slide. Keep the optional live-weather flag False.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md",
+    "link": "https://colab.research.google.com/github/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb"
+  },
+  {
+    "number": 2,
+    "title": "Weather agents and MCP",
+    "time": "00–02",
+    "minutes": 2,
+    "layout": "cover",
+    "items": [
+      "An illustrated workshop in Google Colab",
+      "Rajkumar Rajagobalan",
+      "Two hours · Draft teaching edition"
+    ],
+    "notes": "SLIDE 2: Weather agents and MCP\nTIMING: 00–02; 2 minutes.\n\nSAY: Today we will ask one weather question in three different implementations. By the end, you should be able to explain who requests a tool, who executes it and how a result reaches the model. You will also observe a real MCP connection.\nDO: Introduce yourself and invite students to work in pairs. Explain that the slides provide the concepts, the notebook runs the experiments and the workbook captures evidence.\nASK: What would you need to know to trust an answer about the weather right now? Take one response, without starting a long discussion.\nTIME CONTROL: Spend no more than two minutes here. Installation and account setup belong before class. The timed lesson includes a five-minute break.\nNEXT: Move to the model illustration and ask whether training data can supply a current observation.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md"
+  },
+  {
+    "number": 3,
+    "title": "The model and current weather",
+    "time": "02–06",
+    "minutes": 4,
+    "layout": "image",
+    "items": [
+      "“What is the current temperature in Tokyo?”",
+      "A model needs current evidence to answer current-weather questions."
+    ],
+    "notes": "SLIDE 3: The model and current weather\nTIMING: 02–06; 4 minutes.\n\nSAY: The illustration is a metaphor for the model's information boundary. The robot may have learned patterns about weather, but training alone cannot establish the current temperature. This applies to a model served locally or through a cloud API.\nASK: If the model answers with a plausible temperature, what would be missing? Expected answer: a current source or tool result, along with place, units and an observation label where available.\nDO: Spend one minute asking students to write a prediction in workbook Section 1. Invite two students to name the actor that could fetch the data. Guide them toward executable application code, rather than saying the model itself browses the weather service.\nMISCONCEPTION: A model can be embedded in an application that has tools. This illustration concerns the model without that external evidence path, not a claim that all AI applications lack internet access.\nNEXT: Show how the same question will travel through three implementations.\nILLUSTRATION: Conceptual generated artwork; not a live observation.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md",
+    "image": "model"
+  },
+  {
+    "number": 4,
+    "title": "The two-hour route",
+    "time": "06–10",
+    "minutes": 4,
+    "layout": "table",
+    "items": [
+      [
+        "Clock",
+        "What we do"
+      ],
+      [
+        "10–25",
+        "Direct API lab"
+      ],
+      [
+        "25–50",
+        "Function-calling agent lab"
+      ],
+      [
+        "50–55",
+        "Break"
+      ],
+      [
+        "55–70",
+        "MCP concepts"
+      ],
+      [
+        "70–100",
+        "MCP lab"
+      ],
+      [
+        "100–113",
+        "Challenge and failure tests"
+      ],
+      [
+        "113–120",
+        "Exit ticket"
+      ]
+    ],
+    "notes": "SLIDE 4: The two-hour route\nTIMING: 06–10; 4 minutes.\n\nSAY: We keep the weather scenario stable so the architecture is easier to compare. First Python calls the API. Then a model asks Python to use a tool. Finally the host discovers and invokes that tool through MCP.\nDO: Orient students to workbook Sections 4, 5–6 and 8. Ask them to keep the notebook beside the workbook. Explain that lab slides remain visible while they work; you are not trying to talk for two hours.\nASK: What evidence will we collect at every stage? Expected answer: inputs, execution trace, result, and whether the weather is sample or live.\nTIME CONTROL: Begin Lab 1 concepts at minute 10. If running late later, omit optional unforced inference and live weather, but preserve MCP discovery/call time and the exit ticket.\nNEXT: Focus on the API boundary before introducing a model.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md"
+  },
+  {
+    "number": 5,
+    "title": "An ordinary API exchange",
+    "time": "10–14",
+    "minutes": 4,
+    "layout": "image",
+    "items": [
+      "Python sends the request.",
+      "The weather service returns JSON."
+    ],
+    "notes": "SLIDE 5: An ordinary API exchange\nTIMING: 10–14; 4 minutes.\n\nSAY: An API provides an interface that one piece of software can use. Here Python builds a request containing an endpoint, query parameters and authentication. The service returns JSON, which Python validates and normalizes.\nDO: Point to the outbound HTTP arrow and the inbound JSON arrow. Emphasize that no model is present in this first implementation. The actual endpoint in the lesson is https://serpapi.com/search.json. SerpApi returns Google's weather search result; do not automatically name another weather publisher.\nASK: Can this be useful without an agent? Expected answer: yes, ordinary software can fetch and process data using a fixed procedure.\nCLARIFY: The upcoming --sample command does not send HTTP; it demonstrates the response-processing path using a fixture. The diagram describes the live path.\nNEXT: Inspect the fields that survive normalization.\nILLUSTRATION: Conceptual generated diagram of a request/response exchange.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md",
+    "image": "api"
+  },
+  {
+    "number": 6,
+    "title": "The weather evidence",
+    "time": "14–17",
+    "minutes": 3,
+    "layout": "code",
+    "items": [
+      "\"mock\": true",
+      "\"temperature\": {\"value\": 21, \"unit\": \"C\"}",
+      "\"observation_label\": \"DEMO DATA — not a live observation\""
+    ],
+    "notes": "SLIDE 6: The weather evidence\nTIMING: 14–17; 3 minutes.\n\nSAY: These are selected fields from classroom demonstration data. They show three things we must distinguish: the numeric value, its unit and the fact that it is synthetic. A value of 21 is not meaningful without context.\nDO: Explain that the raw API-shaped fixture includes an answer_box; the adapter returns a more consistent result. The slide is an excerpt, not a complete JSON document. Ask students to locate location and sources in the actual notebook output as well.\nASK: Does a retrieval timestamp prove that a weather measurement is fresh? Expected answer: no, retrieval time and observation time are different.\nMISCONCEPTION: A sample can use a city label and still be synthetic. Never present the 21°C figure as Tokyo's current temperature.\nNEXT: Students run the two direct sample cells and fill their evidence table.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md",
+    "caption": "Selected sample fields · no current-weather claim"
+  },
+  {
+    "number": 7,
+    "title": "Lab 1 · API sample and units",
+    "time": "17–23",
+    "minutes": 6,
+    "layout": "lab",
+    "items": [
+      "Run both Lab 1 cells",
+      "Find answer_box, temperature, source and mock",
+      "Predict 21°C in Fahrenheit; then verify",
+      "Record evidence in workbook Section 4"
+    ],
+    "notes": "SLIDE 7: Lab 1 · API sample and units\nTIMING: 17–23; 6 minutes.\n\nDO: Leave this slide on screen for six minutes. Tell students to run run_lab(\"01_direct_serpapi_api.py\", \"--sample\", \"--show-raw\"), followed by the Fahrenheit sample cell. These are already in the notebook; no terminal is needed.\nCOACH: Spend the first minute confirming the cells ran. During minutes two to four, ask students to point to the sample marker and compare raw answer_box with normalized temperature. Ask them to predict the conversion before running it. The expected result is 69.8°F. During the last two minutes, have partners compare their source and observation labels.\nCHECKPOINT: Each pair should explain that the fixture was read locally and no live provider request occurred.\nFALLBACK: If a helper is undefined, run Preparations A–D in order. If setup still blocks progress, observe a partner and record the evidence rather than consuming the rest of the block.\nNEXT: Ask who executed the API operation in the live variant.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md",
+    "code": "run_lab(\"01_direct_serpapi_api.py\", \"--sample\", \"--show-raw\")\nrun_lab(\"01_direct_serpapi_api.py\", \"--sample\", \"--units\", \"fahrenheit\")",
+    "workbook": "Section 4 · Steps 12–16"
+  },
+  {
+    "number": 8,
+    "title": "Lab 1 debrief",
+    "time": "23–25",
+    "minutes": 2,
+    "layout": "question",
+    "items": [
+      "Who sends the request?",
+      "What proves this is sample data?",
+      "What changed when you chose Fahrenheit?"
+    ],
+    "notes": "SLIDE 8: Lab 1 debrief\nTIMING: 23–25; 2 minutes.\n\nASK: Take one short answer for each question. Python application code sends the request in live mode. The sample flag and provider/observation wording identify demonstration data. The unit conversion changes the temperature representation, not the underlying observation.\nDO: Ask a learner to name perform_serpapi_search in the source as the live network boundary. Avoid a line-by-line adapter tour.\nCLARIFY: Changing a requested city in fixture mode does not fetch a new city's weather. The fixture remains fixed.\nTRANSITION: We have a useful Python function. Next we will describe that function to a model, without giving the model the Python implementation or provider key.\nTIME CONTROL: Move on at minute 25.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md"
+  },
+  {
+    "number": 9,
+    "title": "The function-calling loop",
+    "time": "25–30",
+    "minutes": 5,
+    "layout": "image",
+    "items": [
+      "The model requests a tool.",
+      "The application executes it and returns the result."
+    ],
+    "notes": "SLIDE 9: The function-calling loop\nTIMING: 25–30; 5 minutes.\n\nSAY: Follow the four numbered arrows. The model first emits a structured request containing a tool name and arguments. The application validates the request and executes the weather function. The result returns to the application, which sends it back into the model conversation. A later model turn can explain the result to the user.\nDO: Point at the application in the middle. It is the actor executing the function and maintaining the conversation. Say that the model does not directly call the weather site in this example.\nASK: At which arrow has weather data actually been returned? Expected answer: after execution, when the tool result comes back. A request alone is not enough.\nCLARIFY: This diagram is about function calling, before MCP. The tool implementation may itself call a provider API.\nNEXT: Show the distinction between the tool's description and its code.\nSOURCE: https://developers.openai.com/api/docs/guides/function-calling\nILLUSTRATION: Conceptual generated diagram; arrows represent the application-run tool loop.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md",
+    "image": "loop"
+  },
+  {
+    "number": 10,
+    "title": "Schema and implementation",
+    "time": "30–34",
+    "minutes": 4,
+    "layout": "columns",
+    "items": [
+      "SCHEMA\nName: get_current_weather\nInputs: city, country_code, units\nAllowed units: celsius or fahrenheit",
+      "IMPLEMENTATION\nValidate the arguments\nCall the weather adapter\nReturn data or a structured error"
+    ],
+    "notes": "SLIDE 10: Schema and implementation\nTIMING: 30–34; 4 minutes.\n\nSAY: A schema is a contract. It tells the model what a tool is called and what arguments are accepted. It is not executable Python code. The implementation is the function that performs the work after the host approves the input.\nDO: Open weather_contract.py in the notebook's source-tour cell and find PARAMETERS and TOOL. Then identify execute_weather. The required inputs are city, country_code and units; extra properties are rejected by the direct contract.\nASK: Could the model send a key or arbitrary extra argument instead? Expected answer: the host should validate against the advertised contract and reject unsupported arguments.\nTEACHING CHOICE: Do not expand into the full JSON Schema language. Students only need required fields, types and allowed values for this lab.\nNEXT: Trace how a result is associated with the correct tool request.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md"
+  },
+  {
+    "number": 11,
+    "title": "A request and its matching result",
+    "time": "34–37",
+    "minutes": 3,
+    "layout": "code",
+    "items": [
+      "Tool request:  id = \"call-1\"",
+      "Arguments:     city=\"Tokyo\", country_code=\"JP\", units=\"celsius\"",
+      "Tool result:   role=\"tool\", tool_call_id=\"call-1\""
+    ],
+    "notes": "SLIDE 11: A request and its matching result\nTIMING: 34–37; 3 minutes.\n\nSAY: The tool call has an identifier. When the application returns a result, it includes the matching tool_call_id. This lets the model conversation associate the result with the correct request. The names on this slide are illustrative; real calls can use different identifiers.\nDO: Find the role=tool message in agent_core.py. Point out that the host adds both the assistant's request and the tool result to conversation history.\nASK: What might go wrong if results were returned without a matching identity? Expected answer: the system could not reliably match a result to its request, especially when multiple calls exist.\nCLARIFY: The ID is not a provider API key. It identifies a tool request within the conversation.\nNEXT: Establish exactly which parts of the upcoming run will be real and which will be samples.\nSOURCE: https://developers.openai.com/api/docs/guides/function-calling\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md",
+    "caption": "Illustrative message fields · actual call IDs may differ"
+  },
+  {
+    "number": 12,
+    "title": "Real inference and sample weather",
+    "time": "37–39",
+    "minutes": 2,
+    "layout": "table",
+    "items": [
+      [
+        "Mode",
+        "Model",
+        "Weather",
+        "MCP in Lab 3"
+      ],
+      [
+        "OpenAI + sample",
+        "Real inference",
+        "Synthetic",
+        "Real connection"
+      ],
+      [
+        "--offline",
+        "Scripted turns",
+        "Synthetic",
+        "Real connection"
+      ],
+      [
+        "Live demo",
+        "Real if configured",
+        "SerpApi request",
+        "Real connection"
+      ]
+    ],
+    "notes": "SLIDE 12: Real inference and sample weather\nTIMING: 37–39; 2 minutes.\n\nSAY: These switches control different boundaries. --mock-weather still calls the selected model service. --offline substitutes fixed Tokyo model requests and sample weather; it does not interpret the user's question through a language model. The MCP server and connection remain real in the third lab.\nDO: Ask students to identify their selected route from Preparation C. Have those on the fallback write inference pending in the workbook.\nCLARIFY: The core class uses sample weather. Live calls need a separate SERPAPI_KEY, and OpenAI inference requires account quota. Do not treat the existence of a key as proof of a successful model call.\nTIME CONTROL: Keep this to two minutes and start the hands-on loop at minute 39.\nNEXT: Run Lab 2.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md"
+  },
+  {
+    "number": 13,
+    "title": "Lab 2 · Model request to tool result",
+    "time": "39–47",
+    "minutes": 8,
+    "layout": "lab",
+    "items": [
+      "Run the Lab 2 agent cell",
+      "Trace request, validated arguments and execution",
+      "Compare tool data with the final answer",
+      "Find the sample label"
+    ],
+    "notes": "SLIDE 13: Lab 2 · Model request to tool result\nTIMING: 39–47; 8 minutes.\n\nDO: Keep this slide visible for eight minutes. Students run run_lab(\"02_custom_tool_agent.py\", *model_options()). With OpenAI configured this uses --mock-weather and --force-tool. Without a key it uses --offline.\nSAY: In the OpenAI route, the host requires a first tool call, while the model supplies the arguments. Do not describe this as fully autonomous tool selection.\nCOACH: At minute two, confirm a tool request appears. At minute four, ask pairs to identify the function execution and result. At minute six, compare sample markers and numbers with the final prose. The fallback deliberately skips a generated final answer.\nCHECKPOINT: A learner can point to [TOOL REQUEST], [EXECUTION] and [TOOL RESULT], and explain their different meanings.\nFALLBACK: If OpenAI fails, use run_lab(\"02_custom_tool_agent.py\", \"--offline\"). Record the model integration as pending. Do not expose Secrets on the shared screen.\nNEXT: Debrief why the schema alone could not fetch weather.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md",
+    "code": "run_lab(\"02_custom_tool_agent.py\", *model_options())",
+    "workbook": "Sections 5–6 · Steps 17–25"
+  },
+  {
+    "number": 14,
+    "title": "Lab 2 debrief",
+    "time": "47–50",
+    "minutes": 3,
+    "layout": "question",
+    "items": [
+      "The schema describes. What executes?",
+      "Where does the result re-enter the conversation?",
+      "Who required the first tool call?"
+    ],
+    "notes": "SLIDE 14: Lab 2 debrief\nTIMING: 47–50; 3 minutes.\n\nASK: The application executes the function after validation. The result re-enters through a role=tool message with a matching tool_call_id. In this forced run, the host required the initial tool call.\nDO: Invite a student to complete the sentence: the model requests; application code executes; the result returns to the model. Ask a second learner to explain the sample versus inference distinction.\nOPTIONAL: If a pair has spare time before the break, they may set RUN_UNFORCED=True in the optional cell and observe automatic tool selection. Do not require everyone to repeat the model call.\nMISCONCEPTION: A final response can sound plausible even when unsupported. The weather host withholds an answer if no tool executed; prompts alone are not execution evidence.\nTIME CONTROL: Begin the five-minute break at minute 50.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md"
+  },
+  {
+    "number": 15,
+    "title": "Five-minute break",
+    "time": "50–55",
+    "minutes": 5,
+    "layout": "break",
+    "items": [
+      "Resume at minute 55",
+      "Next: how MCP connects a host to a tool server"
+    ],
+    "notes": "SLIDE 15: Five-minute break\nTIMING: 50–55; 5 minutes.\n\nDO: Announce the return time and leave the slide visible. Use this interval to check one or two blocked students without delaying the class. Do not ask learners to begin a long model download.\nPREPARE: Bring the MCP server source and Lab 3 cells into view in your own notebook. Keep Secrets closed. Confirm that the offline inspect command is available if inference is unreliable.\nTIME CONTROL: Resume at minute 55 even if a few individual setups remain incomplete; use pairs. The next 15 minutes explain MCP before the 30-minute MCP lab.\nNEXT: Define what the protocol standardizes.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md"
+  },
+  {
+    "number": 16,
+    "title": "MCP: a standard tool connection",
+    "time": "55–59",
+    "minutes": 4,
+    "layout": "plain",
+    "items": [
+      "The host can discover a server’s tools",
+      "A shared protocol carries calls and results",
+      "The weather function and provider API still exist"
+    ],
+    "notes": "SLIDE 16: MCP: a standard tool connection\nTIMING: 55–59; 4 minutes.\n\nSAY: Model Context Protocol, or MCP, provides a standard way for a host's client to communicate with a server. In our example the server advertises a tool, the client discovers its contract, and the client invokes it with arguments.\nASK: Does MCP remove the weather API? Expected answer: no. The weather adapter remains behind the server. Does MCP create the model's reasoning? No, the host still communicates with a model service.\nDO: Compare the direct-dispatch entry point with the MCP entry point at a high level. Explain that this course focuses on tools; resources and prompts are other MCP topics for later lessons.\nCLARIFY: Standardized integration does not guarantee trustworthy external data, correct model output or permission to use any tool.\nNEXT: Name the host, client and server using the illustration.\nSOURCE: https://github.com/modelcontextprotocol/python-sdk/tree/v1.x\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md"
+  },
+  {
+    "number": 17,
+    "title": "Host, client and server",
+    "time": "59–64",
+    "minutes": 5,
+    "layout": "image",
+    "items": [
+      "The client belongs to the host.",
+      "The weather function executes in a separate server process."
+    ],
+    "notes": "SLIDE 17: Host, client and server\nTIMING: 59–64; 5 minutes.\n\nSAY: The host is the overall Python application. It owns the model conversation, validation and call budgets. Inside it, the MCP client manages the connection to the weather server. The server is a separate process advertising and executing the weather capability.\nDO: Trace the connection between host and model service, then the separate client/server connection. Emphasize that the model does not directly talk to the stdio server.\nASK: Which process actually runs the weather adapter in Lab 3? Expected answer: the weather MCP server. Who still runs the conversation loop? The Python host.\nDEMONSTRATE: Have one student play the model, one the host/client and one the server. The model asks the host for weather; the host relays a call; the server returns data. Keep the role-play under 90 seconds.\nNEXT: Separate discovery from execution.\nSOURCE: https://github.com/modelcontextprotocol/python-sdk/tree/v1.x\nILLUSTRATION: Conceptual generated architecture; one host/client and one server.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md",
+    "image": "mcp"
+  },
+  {
+    "number": 18,
+    "title": "Discovery comes before invocation",
+    "time": "64–67",
+    "minutes": 3,
+    "layout": "plain",
+    "items": [
+      "1  initialize — establish the session",
+      "2  tools/list — discover the tool contract",
+      "3  tools/call — request execution with arguments",
+      "4  result — return data or an error"
+    ],
+    "notes": "SLIDE 18: Discovery comes before invocation\nTIMING: 64–67; 3 minutes.\n\nSAY: Initialize establishes a protocol session. Listing tools gives the host a name, description and schema. A later call requests execution with arguments. The result is the evidence that comes back from the tool boundary.\nASK: If I can list get_current_weather, has weather already been fetched? Expected answer: no. Discovery proves that the server advertises the tool. It does not prove execution.\nDO: Explain that --inspect in this package does both discovery and a sample call, so students will see both kinds of evidence. The client and server communicate over stdio inside the Colab runtime; stdout is reserved for protocol messages.\nMISCONCEPTION: Printing a configuration or dry-run payload is different from establishing an MCP connection. The upcoming lab performs actual protocol requests.\nNEXT: Compare responsibilities while keeping weather behavior constant.\nSOURCE: https://github.com/modelcontextprotocol/python-sdk/tree/v1.x\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md"
+  },
+  {
+    "number": 19,
+    "title": "What changes with MCP",
+    "time": "67–70",
+    "minutes": 3,
+    "layout": "table",
+    "items": [
+      [
+        "Responsibility",
+        "Custom function agent",
+        "MCP agent"
+      ],
+      [
+        "Tool schema",
+        "Defined by host",
+        "Discovered from server"
+      ],
+      [
+        "Execution request",
+        "Direct Python dispatch",
+        "MCP tools/call"
+      ],
+      [
+        "Weather code",
+        "Runs in host process",
+        "Runs in server process"
+      ],
+      [
+        "Model conversation",
+        "Owned by host",
+        "Owned by host"
+      ]
+    ],
+    "notes": "SLIDE 19: What changes with MCP\nTIMING: 67–70; 3 minutes.\n\nSAY: The weather task remains the same. The key change is the contract and invocation boundary. With the direct function tool, the host defines and dispatches it. With MCP, the host discovers the server's tool and asks the server to execute it. The conversation remains in the host in our teaching implementation.\nASK: What code moved rather than disappeared? Expected answer: the weather adapter and tool execution moved behind the server process.\nCLARIFY: The older provider-hosted LM Studio example manages orchestration differently because that host implements the loop. That is a hosting choice, not a universal MCP requirement. Save that comparison for a later lesson.\nDO: Ask learners to leave their responsibility table partly blank until they see the live local trace in Lab 3.\nTIME CONTROL: Move to the server source at minute 70.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md"
+  },
+  {
+    "number": 20,
+    "title": "The weather MCP server",
+    "time": "70–74",
+    "minutes": 4,
+    "layout": "code",
+    "items": [
+      "@mcp.tool()",
+      "def get_current_weather(city, country_code, units):",
+      "    return execute_weather(arguments, mock=sample_mode)",
+      "mcp.run(transport=\"stdio\")"
+    ],
+    "notes": "SLIDE 20: The weather MCP server\nTIMING: 70–74; 4 minutes.\n\nSAY: This is simplified pseudocode illustrating the shape of the server; the notebook contains the exact runnable source with typed arguments and sample-mode handling. The decorator exposes a tool, the function delegates to the adapter, and the server runs over stdio.\nDO: Run the source display in Lab 3. Point to @mcp.tool(), city/country_code/units and execute_weather. Explain that the entry point starts the child server automatically; students do not need a second terminal or a public URL.\nASK: What would happen if we added ordinary print statements to server stdout? Expected answer: they could corrupt protocol communication. Diagnostic logging belongs on stderr.\nNEXT: Students will inspect an actual session with no model key needed.\nSOURCE: https://github.com/modelcontextprotocol/python-sdk/tree/v1.x\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md",
+    "caption": "Conceptual pseudocode · use the notebook’s complete source"
+  },
+  {
+    "number": 21,
+    "title": "Lab 3A · Discovery and a sample call",
+    "time": "74–82",
+    "minutes": 8,
+    "layout": "lab",
+    "items": [
+      "Read the server source",
+      "Run --inspect",
+      "Identify the discovered parameters",
+      "Find the actual tools/call result"
+    ],
+    "notes": "SLIDE 21: Lab 3A · Discovery and a sample call\nTIMING: 74–82; 8 minutes.\n\nDO: Leave this slide up for eight minutes while students run the first Lab 3 cell. It prints the server source and invokes run_lab(\"03_mcp_agent.py\", \"--inspect\").\nCOACH: Spend minutes one to three finding the tool name and description. During minutes four to six, inspect required arguments and returned sample data. In the final two minutes, ask each pair to distinguish listing from calling.\nEXPECTED: [MCP tools/list] includes get_current_weather. Its schema is mapped into model parameters. [MCP tools/call] precedes a result containing demonstration weather and a mock flag. The server runs as a real child process.\nFALLBACK: This lab needs no OpenAI key. If it fails, troubleshoot runtime preparation or the local MCP process rather than model quota. Pair students after one unsuccessful recovery attempt.\nNEXT: Add the model loop to the same MCP connection.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md",
+    "code": "run_lab(\"03_mcp_agent.py\", \"--inspect\")",
+    "workbook": "Section 8 · Steps 29–30"
+  },
+  {
+    "number": 22,
+    "title": "Lab 3B · The model uses the MCP tool",
+    "time": "82–92",
+    "minutes": 10,
+    "layout": "lab",
+    "items": [
+      "Run the MCP agent cell",
+      "Follow model arguments into tools/call",
+      "Compare returned data with the answer",
+      "Record inference as complete or pending"
+    ],
+    "notes": "SLIDE 22: Lab 3B · The model uses the MCP tool\nTIMING: 82–92; 10 minutes.\n\nDO: Keep this slide on screen for ten minutes. Students run run_lab(\"03_mcp_agent.py\", *model_options()). OpenAI uses real inference with sample weather; the fallback supplies fixed requests and still executes actual MCP calls.\nCOACH: During the first three minutes confirm discovery completes. During minutes four to seven ask students to trace the requested city/country/units into the server result. During the final three minutes have pairs compare the output with Lab 2 and complete their evidence checklist.\nEXPECTED: The model requests the discovered weather tool, the host validates, the MCP client calls the server and returns its result. In OpenAI mode the next model turn explains the result. Sample values must remain labelled.\nFALLBACK: Use run_lab(\"03_mcp_agent.py\", \"--offline\") if inference is unavailable. Do not call that a completed live-model integration. The protocol exercise still counts.\nTIME CONTROL: Stop experimentation at minute 92 and collect the responsibility comparison.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md",
+    "code": "run_lab(\"03_mcp_agent.py\", *model_options())",
+    "workbook": "Section 8 · Steps 31–33"
+  },
+  {
+    "number": 23,
+    "title": "Lab 3 debrief",
+    "time": "92–97",
+    "minutes": 5,
+    "layout": "question",
+    "items": [
+      "Who advertised the schema?",
+      "Which process ran the weather function?",
+      "What did the host still control?",
+      "Which trace proves execution?"
+    ],
+    "notes": "SLIDE 23: Lab 3 debrief\nTIMING: 92–97; 5 minutes.\n\nASK: Have pairs answer without opening the source. The server advertises the schema. The server process executes the weather function. The host controls conversation, validation, model access and budgets. A tools/call request together with its returned result provides invocation evidence; tools/list alone does not.\nDO: Spend two minutes letting pairs fill the workbook comparison table and three minutes hearing answers. Encourage precise actor names instead of saying “the AI did it.”\nMISCONCEPTION: The host still translates the discovered tool into the model's function-calling format. MCP does not eliminate every piece of integration code. It standardizes the client/server boundary.\nCHECKPOINT: Ask one learner who used the fallback to state exactly which components were simulated and which ran. They should say model turns and weather were synthetic while the MCP process and connection were real.\nNEXT: Locate these processes in the actual Colab deployment.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md"
+  },
+  {
+    "number": 24,
+    "title": "Where the class code runs",
+    "time": "97–100",
+    "minutes": 3,
+    "layout": "image",
+    "items": [
+      "Python and the MCP server run inside Colab.",
+      "OpenAI supplies inference; SerpApi supplies live weather only."
+    ],
+    "notes": "SLIDE 24: Where the class code runs\nTIMING: 97–100; 3 minutes.\n\nSAY: Local means local to the Colab runtime. Your browser is on your laptop, while the Python host and MCP server run on the hosted machine. The host calls OpenAI for inference. In live-weather mode the server calls SerpApi. Sample mode skips that weather-provider request.\nASK: Would localhost:1234 in hosted Colab reach LM Studio on your laptop? Expected answer: no. We avoid tunnels in this core class and use OpenAI; the repository's LM Studio route is a separate local-computer exercise.\nCREDENTIAL BOUNDARY: The OpenAI key authenticates the model client. The MCP child process receives the weather key when needed, not the model key. The question, schema and tool data do travel to OpenAI in that mode.\nNEXT: Change one weather request and diagnose a controlled failure.\nSOURCE: https://research.google.com/colaboratory/faq.html\nILLUSTRATION: Conceptual deployment artwork for this workshop.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md",
+    "image": "colab"
+  },
+  {
+    "number": 25,
+    "title": "Pair challenge · Lisbon in Fahrenheit",
+    "time": "100–107",
+    "minutes": 7,
+    "layout": "lab",
+    "items": [
+      "Ask for Lisbon, Portugal, in Fahrenheit",
+      "Check the model’s city, country and unit arguments",
+      "Explain why the sample is still synthetic",
+      "Compare the result with your partner"
+    ],
+    "notes": "SLIDE 25: Pair challenge · Lisbon in Fahrenheit\nTIMING: 100–107; 7 minutes.\n\nDO: Students run the notebook's pair-challenge cell. With OpenAI it asks the MCP agent for Lisbon, Portugal in Fahrenheit; without inference it repeats the direct fixture conversion. Allow four minutes to run and inspect, then three for pairs to explain.\nEXPECTED: In the inference route, inspect whether the model supplied Lisbon, PT and fahrenheit. The synthetic weather generator returns the same base sample for any city, so a Lisbon label does not establish a real Lisbon observation. The expected conversion of the fixed 21°C value is 69.8°F.\nASK: What would you need before saying the answer is current weather? Expected answer: a successful live result, resolved location, units, observation/source evidence and comparison of final prose with the result.\nFALLBACK: Run the direct Fahrenheit sample. Students should not supply a custom question to --offline expecting it to be interpreted; the fallback is a fixed scripted exercise.\nNEXT: Run tests that reject invalid or unsupported behavior.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md",
+    "code": "Question: “What is the weather in Lisbon, Portugal in Fahrenheit?”",
+    "workbook": "Section 9 · Steps 34–35"
+  },
+  {
+    "number": 26,
+    "title": "Failure exercise · Two boundaries",
+    "time": "107–113",
+    "minutes": 6,
+    "layout": "columns",
+    "items": [
+      "INVALID UNITS\nThe MCP tool rejects an unsupported unit\nFind the test and its returned error",
+      "NO TOOL EXECUTION\nThe host withholds unsupported weather prose\nFind test_text_without_tool_withheld"
+    ],
+    "notes": "SLIDE 26: Failure exercise · Two boundaries\nTIMING: 107–113; 6 minutes.\n\nDO: Ask students to run the notebook's test cell. The package currently has 16 tests. Allow two minutes for execution and four minutes to inspect tests/test_training.py and discuss two boundaries.\nEXPECTED: The real stdio test makes an invalid-unit call and checks isError. The host test presents weather prose without a tool and expects the host to withhold it. These are different responsibilities: tool input validation versus evidence requirements in the host.\nASK: Does passing these tests prove a real OpenAI account has quota? No. Does it prove current weather accuracy? No. It checks the simulated or local boundary under test.\nFALLBACK: If execution is blocked, inspect the test source with a partner and predict the result. Record observed versus predicted evidence accurately.\nTIME CONTROL: Stop at minute 113 even if students want to inspect every test. The exit assessment is more important than a complete code tour.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md"
+  },
+  {
+    "number": 27,
+    "title": "Exit ticket",
+    "time": "113–118",
+    "minutes": 5,
+    "layout": "plain",
+    "items": [
+      "1  Does a tool request prove execution?",
+      "2  What does MCP standardize?",
+      "3  What changes when the model backend changes?",
+      "4  How do sample weather and scripted inference differ?",
+      "5  What happens when weather evidence is unavailable?"
+    ],
+    "notes": "SLIDE 27: Exit ticket\nTIMING: 113–118; 5 minutes.\n\nDO: Give students three minutes to write independently in workbook Section 11, then two minutes to compare with a partner. Do not reveal answers immediately.\nANSWER KEY: 1. No; the application or server must execute the request and return a result. 2. MCP standardizes the client/server exchange for discovery and invocation; the provider API and model conversation still exist. 3. The model connection settings and possibly provider-specific model API handling change; the weather tool/server can remain. 4. --mock-weather still uses a real model, while --offline uses fixed scripted turns; both use synthetic weather. 5. Explain the failure and do not invent weather.\nASSESSMENT: Four of five correct is a useful conceptual target; question one must be correct. Track practical evidence separately: sample run, real model loop, real MCP call. An offline-only student should mark model inference pending.\nNEXT: Close with the three essential responsibilities and the next learning task.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md"
+  },
+  {
+    "number": 28,
+    "title": "The responsibilities to remember",
+    "time": "118–120",
+    "minutes": 2,
+    "layout": "close",
+    "items": [
+      "The model requests.",
+      "The host validates and orchestrates.",
+      "The tool executes and returns evidence."
+    ],
+    "notes": "SLIDE 28: The responsibilities to remember\nTIMING: 118–120; 2 minutes.\n\nSAY: The central lesson is responsibility, not the number of commands you ran. We saw the same weather capability through a direct API, a function-calling loop and an MCP server. MCP made discovery and invocation standard at the client/server boundary.\nDO: Ask students to save their notebook copy and retain their workbook notes. Remind them not to share credentials or secret outputs. Point to the repository link for the workbook and source.\nASK: Invite each student to write one next experiment, such as a different tool schema or a provider replacement. Keep responses brief.\nNEXT CLASS: A later session can compare this local server with the provider-hosted SerpApi MCP example, or explore one business-role agent. Do not begin that material inside these final two minutes.\nTIME CONTROL: End at minute 120. Optional appendix slides are reference material, not additional required lesson time.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md",
+    "link": "https://github.com/nuvear/Agents-Basics"
+  },
+  {
+    "number": 29,
+    "title": "Instructor reference · Recovery order",
+    "time": "Appendix · as needed",
+    "minutes": 0,
+    "layout": "table",
+    "items": [
+      [
+        "First failing boundary",
+        "Smallest next check"
+      ],
+      [
+        "Notebook helpers",
+        "Run Preparations A–D in order"
+      ],
+      [
+        "MCP process",
+        "Run the --inspect cell"
+      ],
+      [
+        "Model service",
+        "Check model ID, key access and quota privately"
+      ],
+      [
+        "Weather provider",
+        "Check location and provider error"
+      ],
+      [
+        "Repeated failure",
+        "Use --offline or a ready partner"
+      ]
+    ],
+    "notes": "SLIDE 29: Instructor reference · Recovery order\nTIMING: Appendix · as needed; Outside the 120-minute core sequence.\n\nUSE: This is an instructor reference, not an extra segment in the two-hour timeline. Show it only when a common issue affects the class, then return to the current lab.\nDO: Diagnose the earliest failing boundary. Undefined LAB or run_lab means preparation is incomplete. An MCP inspect failure is independent of OpenAI. An OpenAI authentication or quota failure does not require changing the weather function. A missing weather answer box should lead to a clear error, not guessed conditions.\nFALLBACK COMMANDS: run_lab(\"02_custom_tool_agent.py\", \"--offline\") and run_lab(\"03_mcp_agent.py\", \"--offline\"). The second still uses real MCP. Mark inference pending.\nFACILITATION: After one unsuccessful recovery attempt, pair the student with a ready learner. If time slips, omit unforced inference and live weather. Keep actual discovery/call evidence and the exit ticket.\nPRIVACY: Close Secrets before screen sharing. Never ask learners to paste a key into chat or workbook notes.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md"
+  },
+  {
+    "number": 30,
+    "title": "Instructor reference · Live weather",
+    "time": "Appendix · optional",
+    "minutes": 0,
+    "layout": "plain",
+    "items": [
+      "SERPAPI_KEY is separate from OPENAI_API_KEY",
+      "Rerun Preparation C after adding a secret",
+      "Enable RUN_LIVE_WEATHER only for the demo",
+      "Inspect location, source and observation label"
+    ],
+    "notes": "SLIDE 30: Instructor reference · Live weather\nTIMING: Appendix · optional; Outside the 120-minute core sequence.\n\nUSE: Rehearse this before class. If used, fit it into an existing lab block or offer it after the two-hour class. It is not required for conceptual completion.\nDO: Add SERPAPI_KEY in Colab Secrets, enable notebook access and rerun Preparation C. Change RUN_LIVE_WEATHER to True in the optional cell and run once. The cell performs the direct call and, if OpenAI is configured, the MCP agent. Restore False afterward to prevent accidental repeated provider calls during Run all.\nSAY: The OpenAI key provides inference access, while the SerpApi key provides weather-search access. A successful search may still contain no usable weather answer box.\nCHECK: Compare requested and resolved location, temperature units, source and observation label. A retrieval timestamp is not the observation time. Use the returned publisher identity rather than assuming AccuWeather or Weather.com.\nFALLBACK: Explain the actual provider error and return to sample mode. Never improvise a current temperature. Live calls consume provider quota and model inference consumes API usage.\n\nSOURCE: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/colab/MCP_Weather_2Hour_Colab.ipynb\nWORKBOOK: https://github.com/nuvear/Agents-Basics/blob/main/mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md"
+  }
+]

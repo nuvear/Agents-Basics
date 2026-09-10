@@ -29,6 +29,10 @@ The notebook contains the required scripts and sample data. Students do not need
 
 ## Materials
 
+- **[Instructor teaching deck (PPTX)](output/pptx/MCP_Weather_Teaching_Deck.pptx)** — 30 slides with speaker notes; 120-minute core class.
+- **[Speaker notes (Markdown)](teaching/SPEAKER_NOTES.md)**
+- [How to use the teaching deck](teaching/README.md)
+
 - **[Step-by-step student workbook (Markdown)](mcp-weather-2hour-v1/workbook/MCP_Colab_Student_Workbook.md)**
 - **[Printable student workbook (PDF)](output/pdf/MCP_Colab_Student_Workbook.pdf)**
 
