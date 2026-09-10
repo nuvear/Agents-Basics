@@ -13,3 +13,6 @@ raw_response.json
 # Private presentation build and render checks
 .deck-build/
 node_modules/
+
+# Private localization and ZIP staging
+.course-build/

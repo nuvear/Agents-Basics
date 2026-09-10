@@ -43,7 +43,7 @@ python 03_mcp_agent.py --inspect
 python 03_mcp_agent.py --offline
 ```
 
-Do not distribute the installed `.venv`; each student builds their own environment. No new ZIP has been created.
+Do not distribute the installed `.venv`; each student builds their own environment. At the initial code-validation stage, no new ZIP had been created. The v1.1 course distribution is described in `../PACKAGE-CONTENTS.md`.
 
 ## Google Colab adaptation — 10 September 2026
 

@@ -29,6 +29,11 @@ The notebook contains the required scripts and sample data. Students do not need
 
 ## Materials
 
+- **[Full course ZIP - v1.1](https://github.com/nuvear/Agents-Basics/raw/refs/heads/main/output/distribution/Agents-Basics-Full-Course-v1.1.zip)**
+- [Start here: English / 日本語 / 简体中文](START-HERE.md)
+- Japanese student guide: [Markdown](mcp-weather-2hour-v1/workbook/ja/MCP_Colab_Student_Workbook_JA.md) | [PDF](output/pdf/MCP_Colab_Student_Workbook_JA.pdf)
+- Simplified Chinese student guide: [Markdown](mcp-weather-2hour-v1/workbook/zh-CN/MCP_Colab_Student_Workbook_ZH_CN.md) | [PDF](output/pdf/MCP_Colab_Student_Workbook_ZH_CN.pdf)
+
 - **[Instructor teaching deck (PPTX)](output/pptx/MCP_Weather_Teaching_Deck.pptx)** — 30 slides with speaker notes; 120-minute core class.
 - **[Speaker notes (Markdown)](teaching/SPEAKER_NOTES.md)**
 - [How to use the teaching deck](teaching/README.md)
@@ -67,4 +72,4 @@ Run package tests from that folder in a prepared Python environment:
 python -m unittest discover -s tests -v
 ```
 
-Do not commit keys, `.env`, virtual environments or notebooks containing secret outputs. No credentials or original ZIP archives are included in this repository.
+Do not commit keys, `.env`, virtual environments or notebooks containing secret outputs. No credentials or original ZIP archives are included in this repository. The new distribution ZIP contains the current course, including all three workbook languages.

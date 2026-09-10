@@ -4,6 +4,9 @@ Author: **Rajkumar Rajagobalan**. Draft v1.0, 10 September 2026.
 
 - [Markdown workbook](MCP_Colab_Student_Workbook.md)
 - [PDF workbook](../../output/pdf/MCP_Colab_Student_Workbook.pdf)
+- 日本語：[Markdown](ja/MCP_Colab_Student_Workbook_JA.md) | [PDF](../../output/pdf/MCP_Colab_Student_Workbook_JA.pdf)
+- 简体中文：[Markdown](zh-CN/MCP_Colab_Student_Workbook_ZH_CN.md) | [PDF](../../output/pdf/MCP_Colab_Student_Workbook_ZH_CN.pdf)
+- [Localization scope and rebuild instructions](LOCALIZATION.md)
 
 Use alongside the published Colab notebook. The workbook includes preparation, 38 numbered steps, expected outputs, evidence tables, reflection space, failure diagnosis and an exit ticket. It retains the 120-minute class schedule and identifies live integration checks that remain pending.
 
