@@ -8,6 +8,15 @@ from mcp.client.stdio import stdio_client
 from agent_core import ROOT, parser, run_agent, launch
 from runtime_secrets import should_mock_weather
 
+def mcp_read_timeout() -> timedelta:
+    """Keep the MCP client waiting longer than a live SerpApi scrape + retries."""
+
+    timeout = float(os.getenv("SERPAPI_TIMEOUT_SECONDS", os.getenv("HTTP_TIMEOUT_SECONDS", "60")) or 60)
+    retries = int(os.getenv("SERPAPI_RETRIES", "2") or 2)
+    seconds = timeout * (retries + 2) + 30
+    return timedelta(seconds=max(180, seconds))
+
+
 @asynccontextmanager
 async def weather_session(mock):
     # Only the weather credential is passed to the server, never the model key.
@@ -15,7 +24,7 @@ async def weather_session(mock):
     params = StdioServerParameters(command=sys.executable,
         args=[str(ROOT / "weather_mcp_server.py")] + (["--mock-weather"] if mock else []), env=env)
     async with stdio_client(params) as (read, write):
-        async with ClientSession(read, write, read_timeout_seconds=timedelta(seconds=45)) as session:
+        async with ClientSession(read, write, read_timeout_seconds=mcp_read_timeout()) as session:
             await session.initialize()
             yield session
 
@@ -39,7 +48,17 @@ async def main():
         async def execute(name, arguments):
             print("[MCP tools/call]", name)
             print("[EXECUTION] MCP server runs the weather adapter")
-            result = await session.call_tool(name, arguments)
+            try:
+                result = await session.call_tool(name, arguments)
+            except Exception:
+                return {
+                    "ok": False,
+                    "error_type": "mcp_tool_error",
+                    "message": (
+                        "MCP weather call timed out or failed. "
+                        "A live SerpApi scrape can exceed the previous 45s client limit; rerun."
+                    ),
+                }
             return {"isError": result.isError, "content": [c.model_dump() for c in result.content]}
         if args.inspect:
             print("[MCP INSPECT] sample discovery call; no model and no live weather")

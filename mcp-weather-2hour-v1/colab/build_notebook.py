@@ -603,11 +603,18 @@ code(
 run_lab("03_mcp_agent.py", *model_options())
 
 print("=== Lab 3 · Singapore temperature ===")
-run_lab(
-    "03_mcp_agent.py",
-    "What is the current weather in Singapore in Celsius?",
-    *model_options(),
-)
+try:
+    run_lab(
+        "03_mcp_agent.py",
+        "What is the current weather in Singapore in Celsius?",
+        *model_options(),
+    )
+except RuntimeError:
+    print(
+        "Live MCP Singapore request timed out or failed. "
+        "The Tokyo MCP run above already shows discovery and live execution. "
+        "Rerun this cell after Preparation A if you want Singapore again."
+    )
 ''',
     tags=["lab3"],
 )
