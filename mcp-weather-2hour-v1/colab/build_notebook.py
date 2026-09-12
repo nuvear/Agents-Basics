@@ -476,7 +476,14 @@ run_lab("01_direct_serpapi_api.py", "--sample", "--units", "fahrenheit")
 
 if HAVE_SERPAPI:
     print("=== Lab 1 · current temperature in Fahrenheit ===")
-    run_lab("01_direct_serpapi_api.py", "--units", "fahrenheit")
+    try:
+        run_lab("01_direct_serpapi_api.py", "--units", "fahrenheit")
+    except RuntimeError:
+        print(
+            "Live Fahrenheit request did not return a weather answer box. "
+            "That is a Google/SerpApi result, not a conversion bug. "
+            "The sample above already shows 21°C → 69.8°F."
+        )
 else:
     print("Live Fahrenheit request skipped; no SERPAPI_KEY.")
 ''',

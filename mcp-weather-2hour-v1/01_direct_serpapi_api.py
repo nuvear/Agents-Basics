@@ -144,6 +144,7 @@ def main() -> None:
             print("[1] Build an ordinary HTTP GET request")
             print(f"    Endpoint: {SERPAPI_SEARCH_URL}")
             print(f"    Query: {params['q']}")
+            print(f"    Requested units: {args.units}")
             print("[2] --sample selected: no network request is made")
             payload = load_sample_payload(args.sample_file)
         else:
@@ -159,6 +160,7 @@ def main() -> None:
             print("[1] Build an ordinary HTTP GET request")
             print(f"    Endpoint: {SERPAPI_SEARCH_URL}")
             print(f"    Query: {params['q']}")
+            print(f"    Requested units: {args.units}")
             print(
                 f"[2] Application sends the request to SerpApi "
                 f"(timeout={config.timeout_seconds:.0f}s, retries={config.retries})"

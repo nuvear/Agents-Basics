@@ -92,6 +92,15 @@ class SerpApiWeatherTests(unittest.TestCase):
         self.assertEqual(params["gl"], "jp")
         self.assertEqual(params["no_cache"], "true")
         self.assertIn("Tokyo", params["q"])
+        self.assertNotIn("Fahrenheit", params["q"])
+        self.assertNotIn("Celsius", params["q"])
+        fahrenheit = build_search_parameters(
+            api_key="super-secret",
+            city="Tokyo",
+            country_code="JP",
+            units="fahrenheit",
+        )
+        self.assertEqual(fahrenheit["q"], params["q"])
         self.assertEqual(redact_search_parameters(params)["api_key"], "***REDACTED***")
 
     def test_normalizes_and_converts_fahrenheit_to_celsius(self) -> None:

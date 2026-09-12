@@ -93,8 +93,11 @@ def build_weather_query(
         if normalized_country
         else normalized_city
     )
-    unit_name = "Celsius" if normalized_units == "celsius" else "Fahrenheit"
-    return f"current weather in {location} in {unit_name}"
+    # Ask Google for the weather box only. Requested units are applied after
+    # the adapter reads the provider value. "in Fahrenheit" often makes Google
+    # return organic results instead of a weather answer box.
+    _ = normalized_units
+    return f"current weather in {location}"
 
 
 def build_search_parameters(
