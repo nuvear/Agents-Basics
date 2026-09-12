@@ -227,6 +227,32 @@ class SerpApiWeatherTests(unittest.TestCase):
         self.assertEqual(session.last_no_cache, "false")
         self.assertEqual(payload["search_metadata"]["id"], "demo-search-id")
 
+    def test_retries_city_only_when_answer_box_missing(self) -> None:
+        class TwoQuerySession:
+            def __init__(self) -> None:
+                self.headers: dict[str, str] = {}
+                self.queries: list[str] = []
+
+            def get(self, url, *, params, timeout):
+                self.queries.append(params["q"])
+                if "SG" in params["q"]:
+                    return FakeResponse({"search_metadata": {"status": "Success"}})
+                return FakeResponse(WEATHER_PAYLOAD_F)
+
+        session = TwoQuerySession()
+        environment = {"SERPAPI_KEY": "test-secret-key", "SERPAPI_NO_CACHE": "true"}
+        with patch.dict(os.environ, environment, clear=False):
+            result = get_current_weather(
+                city="Singapore",
+                country_code="SG",
+                units="celsius",
+                session=session,  # type: ignore[arg-type]
+            )
+        self.assertTrue(result["ok"])
+        self.assertEqual(len(session.queries), 2)
+        self.assertIn("Singapore, SG", session.queries[0])
+        self.assertEqual(session.queries[1], "current weather in Singapore")
+
     def test_missing_weather_answer_box_raises_safe_error(self) -> None:
         with self.assertRaises(SerpApiWeatherError):
             normalize_serpapi_weather_result(

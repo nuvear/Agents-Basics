@@ -278,26 +278,13 @@ def get_current_weather(
             )
 
         config = SerpApiConfig.from_environment()
-        params = build_search_parameters(
-            api_key=config.api_key,
+        return fetch_normalized_weather(
+            config=config,
             city=normalized_city,
             country_code=normalized_country,
             units=normalized_units,
             language=normalized_language,
-            no_cache=config.no_cache,
-        )
-        payload = perform_serpapi_search(
-            params=params,
-            timeout_seconds=config.timeout_seconds,
             session=session,
-            retries=config.retries,
-        )
-        return normalize_serpapi_weather_result(
-            payload=payload,
-            requested_city=normalized_city,
-            requested_country_code=normalized_country,
-            requested_units=normalized_units,
-            query=params["q"],
         )
     except SerpApiWeatherError as exc:
         return {
@@ -311,6 +298,54 @@ def get_current_weather(
             "error_type": "provider_response_error",
             "message": f"Unexpected SerpApi weather response: {exc}",
         }
+
+
+def fetch_normalized_weather(
+    *,
+    config: SerpApiConfig,
+    city: str,
+    country_code: str | None,
+    units: str,
+    language: str,
+    session: requests.Session | None = None,
+) -> dict[str, Any]:
+    """Search SerpApi and normalize. Retry city-only if the weather box is missing."""
+
+    countries: list[str | None] = [country_code]
+    if country_code:
+        countries.append(None)
+
+    last_error: SerpApiWeatherError | None = None
+    for index, country in enumerate(countries):
+        params = build_search_parameters(
+            api_key=config.api_key,
+            city=city,
+            country_code=country,
+            units=units,
+            language=language,
+            no_cache=config.no_cache,
+        )
+        if index > 0:
+            print(f"[retry query] No weather answer box; trying {params['q']!r}")
+        payload = perform_serpapi_search(
+            params=params,
+            timeout_seconds=config.timeout_seconds,
+            session=session,
+            retries=config.retries,
+        )
+        try:
+            return normalize_serpapi_weather_result(
+                payload=payload,
+                requested_city=city,
+                requested_country_code=country_code,
+                requested_units=units,
+                query=params["q"],
+            )
+        except SerpApiWeatherError as exc:
+            last_error = exc
+            if "answer box" not in str(exc).lower() or index == len(countries) - 1:
+                raise
+    raise last_error or SerpApiWeatherError("SerpApi weather lookup failed.")
 
 
 def normalize_serpapi_weather_result(

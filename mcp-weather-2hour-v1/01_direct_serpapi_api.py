@@ -17,8 +17,8 @@ from serpapi_weather import (
     SerpApiConfig,
     SerpApiWeatherError,
     build_search_parameters,
+    fetch_normalized_weather,
     normalize_serpapi_weather_result,
-    perform_serpapi_search,
 )
 
 PROJECT_DIR = Path(__file__).resolve().parent
@@ -165,13 +165,16 @@ def main() -> None:
                 f"[2] Application sends the request to SerpApi "
                 f"(timeout={config.timeout_seconds:.0f}s, retries={config.retries})"
             )
-            payload = perform_serpapi_search(
-                params=params,
-                timeout_seconds=config.timeout_seconds,
-                retries=config.retries,
+            result = fetch_normalized_weather(
+                config=config,
+                city=args.city,
+                country_code=args.country or None,
+                units=args.units,
+                language=args.language,
             )
+            payload = None
 
-        if args.save_raw:
+        if args.save_raw and payload is not None:
             args.save_raw.parent.mkdir(parents=True, exist_ok=True)
             args.save_raw.write_text(
                 json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
@@ -180,13 +183,14 @@ def main() -> None:
             print(f"    Saved raw response to: {args.save_raw}")
 
         print("[3] Current weather")
-        result = normalize_serpapi_weather_result(
-            payload=payload,
-            requested_city=args.city,
-            requested_country_code=args.country or None,
-            requested_units=args.units,
-            query=params["q"],
-        )
+        if args.sample:
+            result = normalize_serpapi_weather_result(
+                payload=payload,
+                requested_city=args.city,
+                requested_country_code=args.country or None,
+                requested_units=args.units,
+                query=params["q"],
+            )
         if args.sample:
             result["mock"] = True
             result["provider"] = "Bundled classroom sample — not live data"
