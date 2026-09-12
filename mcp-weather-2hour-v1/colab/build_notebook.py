@@ -637,11 +637,18 @@ With OpenAI, change the question to Lisbon in Fahrenheit. Confirm the model argu
 
 code(
     '''if USE_OPENAI:
-    run_lab(
-        "03_mcp_agent.py",
-        "What is the weather in Lisbon, Portugal in Fahrenheit?",
-        *model_options(),
-    )
+    try:
+        run_lab(
+            "03_mcp_agent.py",
+            "What is the weather in Lisbon, Portugal in Fahrenheit?",
+            *model_options(),
+        )
+    except RuntimeError:
+        print(
+            "Lisbon live MCP call timed out or failed. "
+            "The validated arguments above (or from Lab 3 Tokyo) are the evidence to record: "
+            "city, country_code and units. Rerun Preparation A, then retry this cell."
+        )
 else:
     run_lab("01_direct_serpapi_api.py", "--sample", "--units", "fahrenheit")
 ''',

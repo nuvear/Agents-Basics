@@ -119,4 +119,10 @@ def launch(coroutine):
     except (ValueError, KeyError, TypeError) as exc:
         raise SystemExit(f"ERROR: {scrub(str(exc))}") from None
     except Exception as exc:
-        raise SystemExit(f"ERROR: {type(exc).__name__}. Check setup or run the offline tests; external error details suppressed.") from None
+        name = type(exc).__name__
+        if name in {"ExceptionGroup", "BaseExceptionGroup"}:
+            raise SystemExit(
+                "ERROR: MCP session ended while waiting for a live weather call. "
+                "Rerun Preparation A so Lab 3 waits longer than SerpApi, then retry."
+            ) from None
+        raise SystemExit(f"ERROR: {name}. Check setup or run the offline tests; external error details suppressed.") from None
