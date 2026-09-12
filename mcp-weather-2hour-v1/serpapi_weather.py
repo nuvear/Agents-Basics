@@ -29,21 +29,22 @@ class SerpApiConfig:
     """Runtime configuration for the direct SerpApi REST call."""
 
     api_key: str
-    timeout_seconds: float = 20.0
+    timeout_seconds: float = 60.0
     no_cache: bool = True
+    retries: int = 2
 
     @classmethod
     def from_environment(cls) -> "SerpApiConfig":
         api_key = os.getenv("SERPAPI_KEY", "").strip()
         if not api_key:
             raise SerpApiWeatherError(
-                "SERPAPI_KEY is missing. Copy .env.example to .env and add "
-                "your SerpApi private key."
+                "SERPAPI_KEY is missing. Add it to Colab Secrets on hosted "
+                "Colab, or copy .env.example to .env on a local runtime."
             )
 
         timeout_raw = os.getenv(
             "SERPAPI_TIMEOUT_SECONDS",
-            os.getenv("HTTP_TIMEOUT_SECONDS", "30"),
+            os.getenv("HTTP_TIMEOUT_SECONDS", "60"),
         ).strip()
         try:
             timeout_seconds = float(timeout_raw)
@@ -56,6 +57,14 @@ class SerpApiConfig:
                 "SERPAPI_TIMEOUT_SECONDS must be greater than zero."
             )
 
+        retries_raw = os.getenv("SERPAPI_RETRIES", "2").strip()
+        try:
+            retries = int(retries_raw)
+        except ValueError as exc:
+            raise SerpApiWeatherError("SERPAPI_RETRIES must be an integer.") from exc
+        if retries < 0:
+            raise SerpApiWeatherError("SERPAPI_RETRIES cannot be negative.")
+
         no_cache = parse_boolean_environment(
             name="SERPAPI_NO_CACHE",
             default=True,
@@ -64,6 +73,7 @@ class SerpApiConfig:
             api_key=api_key,
             timeout_seconds=timeout_seconds,
             no_cache=no_cache,
+            retries=retries,
         )
 
 
@@ -133,11 +143,19 @@ def redact_search_parameters(params: Mapping[str, Any]) -> dict[str, Any]:
     return sanitized
 
 
+def request_timeout(timeout_seconds: float) -> tuple[float, float]:
+    """Split connect vs read so a hung scrape can wait longer than DNS/TCP."""
+
+    connect = min(10.0, float(timeout_seconds))
+    return (connect, float(timeout_seconds))
+
+
 def perform_serpapi_search(
     *,
     params: Mapping[str, str],
     timeout_seconds: float,
     session: requests.Session | None = None,
+    retries: int = 2,
 ) -> Mapping[str, Any]:
     """Execute one SerpApi Google Search request and return parsed JSON."""
 
@@ -145,6 +163,8 @@ def perform_serpapi_search(
         raise SerpApiWeatherError("The SerpApi request is missing api_key.")
     if timeout_seconds <= 0:
         raise SerpApiWeatherError("timeout_seconds must be greater than zero.")
+    if retries < 0:
+        raise SerpApiWeatherError("retries cannot be negative.")
 
     request_session = session or requests.Session()
     request_session.headers.update(
@@ -154,20 +174,40 @@ def perform_serpapi_search(
         }
     )
 
-    try:
-        response = request_session.get(
-            SERPAPI_SEARCH_URL,
-            params=dict(params),
-            timeout=timeout_seconds,
-        )
-    except requests.RequestException as exc:
-        detail = str(exc)
+    attempts = retries + 1
+    response = None
+    last_error: requests.RequestException | None = None
+    for attempt in range(1, attempts + 1):
+        try:
+            response = request_session.get(
+                SERPAPI_SEARCH_URL,
+                params=dict(params),
+                timeout=request_timeout(timeout_seconds),
+            )
+            break
+        except (requests.Timeout, requests.ConnectionError) as exc:
+            last_error = exc
+            if attempt < attempts:
+                print(
+                    f"[retry {attempt}/{retries}] SerpApi timed out or dropped "
+                    f"the connection; trying again."
+                )
+                continue
+        except requests.RequestException as exc:
+            last_error = exc
+            break
+
+    if response is None:
+        detail = str(last_error or "unknown network error")
         secret = str(params.get("api_key") or "")
         if secret:
             detail = detail.replace(secret, "***REDACTED***")
         raise SerpApiWeatherError(
-            f"Could not reach SerpApi: {detail}"
-        ) from exc
+            "SerpApi connected but did not finish in "
+            f"{timeout_seconds:.0f}s after {attempts} attempt(s). "
+            "Set SERPAPI_TIMEOUT_SECONDS higher, or rerun; a no_cache Google "
+            f"scrape can be slow. Last error: {detail}"
+        ) from last_error
 
     raise_for_provider_status(response)
 
@@ -229,6 +269,7 @@ def get_current_weather(
             params=params,
             timeout_seconds=config.timeout_seconds,
             session=session,
+            retries=config.retries,
         )
         return normalize_serpapi_weather_result(
             payload=payload,

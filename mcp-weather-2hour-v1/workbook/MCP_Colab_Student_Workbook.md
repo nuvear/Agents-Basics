@@ -101,15 +101,18 @@ Click the triangular Run button beside a code cell, or select the cell and press
 
 ### Step 5. Run Preparation A
 
-Find **Preparation A - create the lab files** and run the collapsed setup cell. It writes the bundled scripts and sample JSON into the runtime.
+Find **Preparation A · create the lab files** and run the setup cell.
 
-Expected confirmation:
+- Hosted Colab downloads the workshop from this GitHub repository into `/content/mcp_weather_2hour`.
+- A local Colab runtime locates the files already on the Mac.
+
+Expected confirmation includes:
 
 ```text
-Workshop files ready: /content/mcp_weather_2hour
+Workshop files ready.
 ```
 
-Open Colab's Files panel and find this folder. The setup does not extract a ZIP or mount your Google Drive. Expand the setup cell if you want to inspect the bundled source.
+Open Colab's Files panel and find the `LAB` folder printed by the cell. No Google Drive mount is required.
 
 ### Step 6. Run Preparation B
 
@@ -143,13 +146,15 @@ For the core sample labs, leave `SERPAPI_KEY` unconfigured. The optional live de
 
 ### Step 9. Run Preparation C
 
-Leave `USE_MASKED_PROMPT = False` when using Colab Secrets. Run the credential cell. It reads the keys without printing their values and reports the selected mode.
+Leave `USE_MASKED_PROMPT = False` when using Colab Secrets or a local `.env`. Run the credential cell. It reads the keys without printing their values and reports the selected mode.
 
-Expected mode is one of:
+Expected summary is one of:
 
 ```text
-OpenAI inference + sample weather
-Scripted model fallback + sample weather
+Summary: OpenAI inference + live weather
+Summary: OpenAI inference + sample weather
+Summary: scripted model fallback + live weather
+Summary: scripted model fallback + sample weather
 ```
 
 If Secrets is not available and the facilitator directs you to use the masked prompt, set `USE_MASKED_PROMPT = True`, rerun the cell and enter the key in the masked input. Never replace a source-code string with your real key.
@@ -377,19 +382,24 @@ The same cell runs:
 run_lab("03_mcp_agent.py", "--inspect")
 ```
 
-Find `[MCP tools/list]`. Identify `get_current_weather`, its description and parameters. The server's input schema is shown as `parameters` after mapping to the model tool format. Then find `[MCP tools/call]` and the sample result.
+Find `[MCP tools/list]`. Identify `get_current_weather`, its description and parameters. The server's input schema is shown as `parameters` after mapping to the model tool format. Then find `[MCP tools/call]` and the sample result. `[WEATHER SOURCE]` should say `sample/mock`.
 
-This is actual local MCP execution, even without OpenAI or SerpApi credentials.
+This is actual local MCP execution, even without OpenAI or SerpApi credentials. `--inspect` never fetches live weather.
 
 ### Step 31. Connect the model loop
 
-Run the next cell:
+Run the next cell. It uses the same key rule as Labs 1 and 2, then asks for Singapore:
 
 ```python
 run_lab("03_mcp_agent.py", *model_options())
+run_lab(
+    "03_mcp_agent.py",
+    "What is the current weather in Singapore in Celsius?",
+    *model_options(),
+)
 ```
 
-Follow discovery, model request, validated arguments, MCP invocation and result. With the no-key route, confirm the trace explicitly labels the simulated model.
+Follow discovery, model request, validated arguments, MCP invocation and result. Check `[WEATHER SOURCE]`: `live SerpApi` when `SERPAPI_KEY` is present, otherwise `sample/mock`. With the no-key route, confirm the trace explicitly labels the simulated model.
 
 ### Step 32. Compare responsibilities
 
@@ -416,7 +426,7 @@ Real model inference completed [ ]  inference still pending [ ]
 
 ### Step 34. Change the request
 
-With OpenAI, run the challenge cell asking for Lisbon, Portugal in Fahrenheit. Check whether the model supplied the intended city, country and units. The sample generator is synthetic for any city; 69.8 degrees Fahrenheit is not a real Lisbon observation.
+With OpenAI, run the challenge cell asking for Lisbon, Portugal in Fahrenheit. Check whether the model supplied the intended city, country and units. If `SERPAPI_KEY` is present the weather is live. If it is missing, the sample generator is synthetic for any city and 69.8°F is not a real Lisbon observation.
 
 Without inference, the cell repeats the direct sample's Fahrenheit conversion. Explain the fixed fixture and unit conversion to your partner.
 

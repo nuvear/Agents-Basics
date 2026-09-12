@@ -55,9 +55,9 @@ Ask: “Where did the provider code go?” Answer: into the server boundary; it 
 ## 70–100 — Lab 3: real MCP
 
 - 70–75: open `weather_mcp_server.py`; identify the tool decorator, typed arguments and function call. Explain why stdout is reserved for protocol messages.
-- 75–82: run `python 03_mcp_agent.py --inspect`. Identify the actual discovered schema and actual sample tool result. No model needed.
-- 82–90: run `python 03_mcp_agent.py --provider openai --mock-weather --force-tool`, or use LM Studio.
-- 90–95: open `03_mcp_agent.py`; locate `initialize`, `list_tools` and `call_tool`.
+- 75–82: run `python 03_mcp_agent.py --inspect`. Identify the discovered schema and the sample tool result. No model and no live weather.
+- 82–90: run the notebook Lab 3 agent cell. It uses live SerpApi when `SERPAPI_KEY` is present, otherwise labelled sample weather — the same rule as Labs 1 and 2. Then run the Singapore question.
+- 90–95: open `03_mcp_agent.py`; locate `initialize`, `list_tools` and `call_tool`. Point to `[WEATHER SOURCE]`.
 - 95–100: pairs fill the responsibility table in the workbook. Ask what stayed constant.
 
 Fallback: `python 03_mcp_agent.py --offline`. The SDK still launches the server and performs protocol calls; only the model and weather data are simulated. The trace is execution evidence for local MCP, not external service availability.
@@ -68,7 +68,7 @@ Checkpoint: each pair points to `tools/list` and `tools/call`, and names the pro
 
 Use 5 minutes for a variation, 5 for failure and 3 for explanation.
 
-Variation with a real model: ask for Lisbon, Portugal in Fahrenheit using either agent entry point with `--mock-weather`. Explain that mock output is synthetic for any city; 21°C/69.8°F is not a location-specific observation. Compare request arguments to result fields.
+Variation with a real model: ask for Lisbon, Portugal in Fahrenheit using the Lab 3 agent cell. If `SERPAPI_KEY` is present the weather is live; otherwise it is labelled sample data and 21°C/69.8°F is not a location-specific observation. Compare request arguments to result fields.
 
 Variation without a model: change the direct sample to Fahrenheit and predict 69.8°F before running it.
 

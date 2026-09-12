@@ -4,12 +4,15 @@ import os
 import unittest
 from unittest.mock import patch
 
+import requests
+
 from serpapi_weather import (
     SERPAPI_SEARCH_URL,
     SerpApiWeatherError,
     build_search_parameters,
     get_current_weather,
     normalize_serpapi_weather_result,
+    perform_serpapi_search,
     redact_search_parameters,
 )
 
@@ -34,14 +37,14 @@ class FakeSession:
         self.headers: dict[str, str] = {}
         self.last_url: str | None = None
         self.last_params: dict[str, str] | None = None
-        self.last_timeout: float | None = None
+        self.last_timeout: float | tuple[float, float] | None = None
 
     def get(
         self,
         url: str,
         *,
         params: dict[str, str],
-        timeout: float,
+        timeout: float | tuple[float, float],
     ) -> FakeResponse:
         self.last_url = url
         self.last_params = params
@@ -126,7 +129,63 @@ class SerpApiWeatherTests(unittest.TestCase):
         assert session.last_params is not None
         self.assertEqual(session.last_params["api_key"], "test-secret-key")
         self.assertNotIn("test-secret-key", str(result))
-        self.assertEqual(session.last_timeout, 12.0)
+        self.assertEqual(session.last_timeout, (10.0, 12.0))
+
+    def test_retries_timeout_then_succeeds(self) -> None:
+        class FlakySession:
+            def __init__(self) -> None:
+                self.headers: dict[str, str] = {}
+                self.calls = 0
+
+            def get(self, url, *, params, timeout):
+                self.calls += 1
+                if self.calls == 1:
+                    raise requests.Timeout("read timed out")
+                return FakeResponse(WEATHER_PAYLOAD_F)
+
+        session = FlakySession()
+        params = build_search_parameters(
+            api_key="test-secret-key",
+            city="Dallas",
+            country_code="US",
+            units="celsius",
+        )
+        payload = perform_serpapi_search(
+            params=params,
+            timeout_seconds=12,
+            session=session,  # type: ignore[arg-type]
+            retries=2,
+        )
+        self.assertEqual(session.calls, 2)
+        self.assertEqual(payload["search_metadata"]["id"], "demo-search-id")
+
+    def test_timeout_retries_are_exhausted(self) -> None:
+        class AlwaysTimeout:
+            def __init__(self) -> None:
+                self.headers: dict[str, str] = {}
+                self.calls = 0
+
+            def get(self, url, *, params, timeout):
+                self.calls += 1
+                raise requests.Timeout("read timed out")
+
+        session = AlwaysTimeout()
+        params = build_search_parameters(
+            api_key="test-secret-key",
+            city="Dallas",
+            country_code="US",
+            units="celsius",
+        )
+        with self.assertRaises(SerpApiWeatherError) as caught:
+            perform_serpapi_search(
+                params=params,
+                timeout_seconds=12,
+                session=session,  # type: ignore[arg-type]
+                retries=2,
+            )
+        self.assertEqual(session.calls, 3)
+        self.assertIn("12s", str(caught.exception))
+        self.assertNotIn("test-secret-key", str(caught.exception))
 
     def test_missing_weather_answer_box_raises_safe_error(self) -> None:
         with self.assertRaises(SerpApiWeatherError):

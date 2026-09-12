@@ -4,8 +4,8 @@ import json
 import os
 from pathlib import Path
 from openai import AsyncOpenAI, APIError
-from dotenv import load_dotenv
 from jsonschema import validate, ValidationError
+from runtime_secrets import MISSING_OPENAI_KEY, apply_runtime_secrets, should_mock_weather
 from weather_contract import scrub
 
 ROOT = Path(__file__).resolve().parent
@@ -17,7 +17,7 @@ unit, condition, observation label and source where present. A retrieval time
 is not an observation time. Do not invent missing fields."""
 
 def parser(description):
-    load_dotenv(ROOT / ".env")
+    apply_runtime_secrets(dotenv_paths=[ROOT / ".env"])
     p = argparse.ArgumentParser(description=description)
     p.add_argument("question", nargs="?", default="What is the current weather in Tokyo, Japan in Celsius?")
     p.add_argument("--provider", choices=["lmstudio", "openai"], default=os.getenv("MODEL_PROVIDER", "lmstudio"))
@@ -31,7 +31,7 @@ def client_config(args):
     if args.provider == "openai":
         key = os.getenv("OPENAI_API_KEY", "").strip()
         if not key:
-            raise ValueError("Set OPENAI_API_KEY in this package's .env, or use --offline.")
+            raise ValueError(MISSING_OPENAI_KEY)
         return AsyncOpenAI(api_key=key, base_url="https://api.openai.com/v1", timeout=30, max_retries=0), args.model or os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
     model = args.model or os.getenv("LM_STUDIO_MODEL", "").strip()
     if not model:
@@ -94,8 +94,10 @@ async def run_agent(args, tools, execute):
         return await run_loop(args, tools, execute)
     client, model = client_config(args)
     print(f"[BACKEND] {args.provider}; model={model}")
-    if args.mock_weather:
+    if should_mock_weather(mock_weather=args.mock_weather, offline=args.offline):
         print("[SAMPLE WEATHER] Model service is real; weather data is simulated.")
+    else:
+        print("[LIVE WEATHER] SerpApi key present; fetching current conditions.")
     if args.force_tool:
         print("[FORCED TOOL] Host requires a tool on the first turn.")
     async with client:

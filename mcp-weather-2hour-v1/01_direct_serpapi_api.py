@@ -11,17 +11,14 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
-from dotenv import load_dotenv
-
+from runtime_secrets import apply_runtime_secrets
 from serpapi_weather import (
     SERPAPI_SEARCH_URL,
     SerpApiConfig,
     SerpApiWeatherError,
     build_search_parameters,
-    find_current_weather_answer_box,
     normalize_serpapi_weather_result,
     perform_serpapi_search,
-    redact_search_parameters,
 )
 
 PROJECT_DIR = Path(__file__).resolve().parent
@@ -81,7 +78,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--show-raw",
         action="store_true",
-        help="Print the complete provider response instead of only answer_box.",
+        help="Also print the complete provider JSON after the brief summary.",
     )
     parser.add_argument(
         "--save-raw",
@@ -91,8 +88,47 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def format_brief_weather(result: Mapping[str, Any]) -> str:
+    location = result.get("location") or {}
+    place = (
+        location.get("resolved")
+        or location.get("requested_city")
+        or "Unknown place"
+    )
+    country = location.get("requested_country_code")
+    if country and "," not in str(place):
+        place = f"{place}, {country}"
+
+    temperature = result.get("temperature") or {}
+    value = temperature.get("value")
+    unit = temperature.get("unit") or ""
+    condition = result.get("condition") or "condition unknown"
+    lines = [f"Now: {value}°{unit} in {place} ({condition})"]
+
+    extras = [
+        f"Humidity {result['humidity']}" if result.get("humidity") else "",
+        f"Wind {result['wind']}" if result.get("wind") else "",
+        f"Rain {result['precipitation']}" if result.get("precipitation") else "",
+    ]
+    extras = [item for item in extras if item]
+    if extras:
+        lines.append(" · ".join(extras))
+
+    footer = []
+    observed = result.get("observation_label")
+    if observed:
+        footer.append(f"Observed {observed}")
+    today = result.get("today") or {}
+    if today.get("high") is not None and today.get("low") is not None:
+        today_unit = today.get("unit") or unit
+        footer.append(f"Today {today['high']}°/{today['low']}°{today_unit}")
+    if footer:
+        lines.append(" · ".join(footer))
+    return "\n".join(lines)
+
+
 def main() -> None:
-    load_dotenv()
+    apply_runtime_secrets(dotenv_paths=[PROJECT_DIR / ".env"])
     args = build_parser().parse_args()
 
     try:
@@ -107,14 +143,7 @@ def main() -> None:
             )
             print("[1] Build an ordinary HTTP GET request")
             print(f"    Endpoint: {SERPAPI_SEARCH_URL}")
-            print(
-                "    Query parameters:\n"
-                + json.dumps(
-                    redact_search_parameters(params),
-                    indent=2,
-                    ensure_ascii=False,
-                )
-            )
+            print(f"    Query: {params['q']}")
             print("[2] --sample selected: no network request is made")
             payload = load_sample_payload(args.sample_file)
         else:
@@ -129,25 +158,16 @@ def main() -> None:
             )
             print("[1] Build an ordinary HTTP GET request")
             print(f"    Endpoint: {SERPAPI_SEARCH_URL}")
+            print(f"    Query: {params['q']}")
             print(
-                "    Query parameters:\n"
-                + json.dumps(
-                    redact_search_parameters(params),
-                    indent=2,
-                    ensure_ascii=False,
-                )
+                f"[2] Application sends the request to SerpApi "
+                f"(timeout={config.timeout_seconds:.0f}s, retries={config.retries})"
             )
-            print("[2] Application sends the request to SerpApi")
             payload = perform_serpapi_search(
                 params=params,
                 timeout_seconds=config.timeout_seconds,
+                retries=config.retries,
             )
-
-        print("[3] SerpApi returns JSON")
-        display_payload: Any = (
-            payload if args.show_raw else find_current_weather_answer_box(payload)
-        )
-        print(json.dumps(display_payload, indent=2, ensure_ascii=False))
 
         if args.save_raw:
             args.save_raw.parent.mkdir(parents=True, exist_ok=True)
@@ -157,7 +177,7 @@ def main() -> None:
             )
             print(f"    Saved raw response to: {args.save_raw}")
 
-        print("[4] Application extracts and normalizes the weather fields")
+        print("[3] Current weather")
         result = normalize_serpapi_weather_result(
             payload=payload,
             requested_city=args.city,
@@ -168,7 +188,12 @@ def main() -> None:
         if args.sample:
             result["mock"] = True
             result["provider"] = "Bundled classroom sample — not live data"
-        print(json.dumps(result, indent=2, ensure_ascii=False))
+        print(format_brief_weather(result))
+
+        if args.show_raw:
+            print()
+            print("[4] Raw provider JSON")
+            print(json.dumps(payload, indent=2, ensure_ascii=False))
     except SerpApiWeatherError as exc:
         raise SystemExit(f"ERROR: {exc}") from exc
 

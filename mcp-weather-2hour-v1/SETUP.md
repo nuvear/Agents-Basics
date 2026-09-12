@@ -1,6 +1,6 @@
 # Pre-class setup — complete before the two-hour session
 
-**For the Google Colab class, follow [Colab preparation](colab/README.md) and the notebook cells.** No local Python or LM Studio installation is needed. The instructions below apply only to the optional local-computer route.
+**For the Google Colab class, follow [Colab preparation](colab/README.md) and the notebook cells.** The same notebook supports a hosted runtime (Colab Secrets + git clone) and a local Colab runtime (workshop `.env` + files on disk). No LM Studio installation is needed for that class. The instructions below apply only to the optional local-computer terminal route.
 
 Allow 20–40 minutes, longer if downloading a local model. Bring Python 3.11 or newer, a terminal and a text editor. This edition was tested on macOS with Python 3.14; Windows commands are supplied but have not been executed here.
 
