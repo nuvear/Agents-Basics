@@ -159,6 +159,7 @@ def perform_serpapi_search(
     timeout_seconds: float,
     session: requests.Session | None = None,
     retries: int = 2,
+    cache_fallback: bool = True,
 ) -> Mapping[str, Any]:
     """Execute one SerpApi Google Search request and return parsed JSON."""
 
@@ -201,6 +202,23 @@ def perform_serpapi_search(
             break
 
     if response is None:
+        if (
+            cache_fallback
+            and str(params.get("no_cache", "")).lower() == "true"
+        ):
+            print(
+                "[retry cache] no_cache Google scrape timed out; "
+                "trying SerpApi's cached result."
+            )
+            cached = dict(params)
+            cached["no_cache"] = "false"
+            return perform_serpapi_search(
+                params=cached,
+                timeout_seconds=timeout_seconds,
+                session=request_session,
+                retries=0,
+                cache_fallback=False,
+            )
         detail = str(last_error or "unknown network error")
         secret = str(params.get("api_key") or "")
         if secret:

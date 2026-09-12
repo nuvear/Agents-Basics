@@ -405,7 +405,7 @@ def run_lab(script, *arguments):
     result = subprocess.run(
         [str(PYTHON), str(LAB / script), *arguments],
         cwd=LAB,
-        timeout=300,
+        timeout=420,
         capture_output=True,
         text=True,
     )
@@ -453,14 +453,30 @@ Run the sample first. It reads a fixture and makes no HTTP request. If `SERPAPI_
 """)
 
 code(
-    '''print("=== Lab 1 · sample (no network) ===")
+    '''def run_live_lab(script, *arguments, label):
+    print(f"=== {label} ===")
+    try:
+        run_lab(script, *arguments)
+    except RuntimeError:
+        print(
+            "Live SerpApi request timed out or returned no weather box. "
+            "A no_cache Google scrape can take longer than 60s. "
+            "Rerun this cell, or continue; the sample result above is still valid."
+        )
+
+
+print("=== Lab 1 · sample (no network) ===")
 run_lab("01_direct_serpapi_api.py", "--sample")
 
 if HAVE_SERPAPI:
-    print("=== Lab 1 · live SerpApi (Tokyo) ===")
-    run_lab("01_direct_serpapi_api.py")
-    print("=== Lab 1 · Singapore temperature ===")
-    run_lab("01_direct_serpapi_api.py", "Singapore", "--country", "SG")
+    run_live_lab("01_direct_serpapi_api.py", label="Lab 1 · live SerpApi (Tokyo)")
+    run_live_lab(
+        "01_direct_serpapi_api.py",
+        "Singapore",
+        "--country",
+        "SG",
+        label="Lab 1 · Singapore temperature",
+    )
 else:
     print("Live Lab 1 skipped. Add SERPAPI_KEY and rerun Preparation C.")
 ''',

@@ -192,9 +192,40 @@ class SerpApiWeatherTests(unittest.TestCase):
                 session=session,  # type: ignore[arg-type]
                 retries=2,
             )
-        self.assertEqual(session.calls, 3)
+        self.assertEqual(session.calls, 4)
         self.assertIn("12s", str(caught.exception))
         self.assertNotIn("test-secret-key", str(caught.exception))
+
+    def test_timeout_falls_back_to_serpapi_cache(self) -> None:
+        class TimeoutThenCache:
+            def __init__(self) -> None:
+                self.headers: dict[str, str] = {}
+                self.calls = 0
+                self.last_no_cache: str | None = None
+
+            def get(self, url, *, params, timeout):
+                self.calls += 1
+                self.last_no_cache = params.get("no_cache")
+                if params.get("no_cache") == "true":
+                    raise requests.Timeout("read timed out")
+                return FakeResponse(WEATHER_PAYLOAD_F)
+
+        session = TimeoutThenCache()
+        params = build_search_parameters(
+            api_key="test-secret-key",
+            city="Dallas",
+            country_code="US",
+            units="celsius",
+        )
+        payload = perform_serpapi_search(
+            params=params,
+            timeout_seconds=12,
+            session=session,  # type: ignore[arg-type]
+            retries=1,
+        )
+        self.assertGreaterEqual(session.calls, 2)
+        self.assertEqual(session.last_no_cache, "false")
+        self.assertEqual(payload["search_metadata"]["id"], "demo-search-id")
 
     def test_missing_weather_answer_box_raises_safe_error(self) -> None:
         with self.assertRaises(SerpApiWeatherError):
